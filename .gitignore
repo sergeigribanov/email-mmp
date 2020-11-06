@@ -1,0 +1,8 @@
+token.pickle
+database.db
+*.json
+*.pdf
+*.txt
+problems
+downloads
+emmp/__pycache__
