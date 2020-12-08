@@ -1,8 +1,10 @@
 token.pickle
 database.db
-*.json
+options_*.json
+results_*.json
+scores_*.json
+credentials.json
 *.pdf
-*.txt
 problems
 downloads
 emmp/__pycache__

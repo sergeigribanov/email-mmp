@@ -1,0 +1,30 @@
+{
+    "test" : {
+	"send_options" : {
+	    "subject" : "Котрольная работа по ММФ",
+	    "body" : "messages/test/send_options_body.txt"
+	},
+	"send_results" : {
+	    "subject" : "Результаты пробной контрольной работы по ММФ",
+	    "body" : "messages/test/send_results_body.txt"
+	},
+	"test_msg" : {
+	    "subject" : "ММФ: тестовое сообщение",
+	    "body" : "messages/test/test_msg_body.txt"
+	}
+    },
+    "exam" : {
+	"send_options" : {
+	    "subject" : "Котрольная работа по ММФ",
+	    "body" : "messages/exam/send_options_body.txt"
+	},
+	"send_results" : {
+	    "subject" : "Результаты контрольной работы по ММФ",
+	    "body" : "messages/exam/send_results_body.txt"
+	},
+	"test_msg" : {
+	    "subject" : "ММФ: тестовое сообщение",
+	    "body" : "messages/exam/test_msg_body.txt"
+	}
+    }
+}
