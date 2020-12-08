@@ -6,11 +6,14 @@ from email.mime.multipart import MIMEMultipart
 import mimetypes
 from email.mime.base import MIMEBase
 
-def create_message(sender, to, subject, message_text, attachment = None):
+def create_message(sender, to, subject, message_text, attachment = None, cc = ''):
     message = MIMEMultipart('mixed')
     message['to'] = to
     message['from'] = sender
     message['subject'] = subject
+    if type(cc) == str and cc != '':
+        message['cc'] = cc
+
     msg_text = MIMEText(message_text, 'html')
     message.attach(msg_text)
     if attachment == None:
@@ -42,6 +45,6 @@ def send_message(service, user_id, message):
         print('An error occurred: %s' % e)
         return None
 
-def send(service, to, subject, message_text, attachment = None):
-    message = create_message('me', to, subject, message_text, attachment)
+def send(service, to, subject, message_text, attachment = None, cc = ''):
+    message = create_message('me', to, subject, message_text, attachment, cc)
     return send_message(service, 'me', message)

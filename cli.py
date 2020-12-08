@@ -63,9 +63,9 @@ class MMPExamCli(cmd.Cmd):
     def emptyline(self):
         return ''
 
-    def do_send_options(self, arg):
+    def do_send_options(self, cc):
         'Sending options to tagged group of students'
-        self._send_options()
+        self._send_options(cc)
         
     def do_load_results(self, arg):
         'Getting results'
@@ -113,28 +113,28 @@ class MMPExamCli(cmd.Cmd):
         print('noks = {noks}, nfails = {nfails}'.format(
             noks = noks, nfails = nfails))
                 
-    def do_send_test(self, arg):
-        self._send_test()
+    def do_send_test(self, cc):
+        self._send_test(cc)
 
     def do_set_results(self, arg):
         'Set results'
         path = 'results_{}.json'.format(self.tag)
-        self._set_results(arg)
+        self._set_results()
         
-    def do_send_results(self, arg):
+    def do_send_results(self, cc):
         'Send results'
         path = 'results_{}.json'.format(self.tag)
         if not os.path.exists(path):
-            self._set_results(arg)
+            self._set_results()
             
-        self._send_results(path)
+        self._send_results(path, cc)
 
     def do_exit(self, arg):
         'Exiting'
         self.conn.close()
         return True
 
-    def _send_test(self):
+    def _send_test(self, cc):
         with open(self.messaging_config, 'r') as fl:
             data = json.load(fl)
 
@@ -147,7 +147,7 @@ class MMPExamCli(cmd.Cmd):
             name = '{} {}'.format(
                 persons[pid]['last_name'], persons[pid]['first_name'])
             body = body_template.format(name = name)
-            send(self.service, pid, subject, body)
+            send(self.service, pid, subject, body, cc = cc)
             
 
     def _unzip(self, prefix):
@@ -281,7 +281,7 @@ class MMPExamCli(cmd.Cmd):
         with open(path, 'w', encoding='utf-8') as fl:
             json.dump(result, fl, indent=4, ensure_ascii=False)
         
-    def _send_options_to_person(self, poption):
+    def _send_options_to_person(self, poption, cc):
         option = poption['option']
         body = self.options_body_template.format(
             name = poption['name'],
@@ -289,9 +289,9 @@ class MMPExamCli(cmd.Cmd):
         send(self.service,
              poption['email'],
              self.options_subject, body,
-             attachment = option[1])
+             attachment = option[1], cc = cc)
 
-    def _send_options(self):
+    def _send_options(self, cc):
         option_config_path = 'options_{}.json'.format(self.tag)
         options = []
         if not os.path.exists(option_config_path):
@@ -302,12 +302,12 @@ class MMPExamCli(cmd.Cmd):
             
         for poption in options:
             try:
-                self._send_options_to_person(poption)
+                self._send_options_to_person(poption, cc)
             except:
                 print('Not sent: {name}, {email}'.format(
                     name = poption['name'], email = poption['email']))
 
-    def _set_results(self, addresses):
+    def _set_results(self):
         persons = get_persons(self.conn, self.tag)
         result = dict()
         result['sent'] = []
@@ -322,12 +322,7 @@ class MMPExamCli(cmd.Cmd):
             filename = '{lname} {io} {gnum}_final.pdf'.format(
                 lname = lname, io = io, gnum = gnum)
             path = os.path.join('results', self.tag, filename)
-            if addresses != '':
-                if 'mailto' in pid:
-                    pid = '{},{}'.format(pid,addresses)
-                else:
-                    pid = 'mailto:{},{}'.format(pid,addresses)
-                
+
             if os.path.exists(path):
                 result['sent'].append({'email' : pid, 'name' : name, 'path' : path})
             else:
@@ -337,7 +332,7 @@ class MMPExamCli(cmd.Cmd):
         with open(path, 'w', encoding='utf-8') as fl:
             json.dump(result, fl, indent=4, ensure_ascii=False)
             
-    def _send_results(self, path):
+    def _send_results(self, path, cc):
         with open(path, 'r') as fl:
             data = json.load(fl)
 
@@ -376,7 +371,8 @@ class MMPExamCli(cmd.Cmd):
                 name = el['name'], score = score, value = value, cong = cong)
             send(self.service, el['email'],
                  self.results_subject, body,
-                 attachment = el['path'])
+                 attachment = el['path'],
+                 cc = cc)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
