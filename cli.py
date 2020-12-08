@@ -67,8 +67,8 @@ class MMPExamCli(cmd.Cmd):
         'Sending options to tagged group of students'
         self._send_options(cc)
         
-    def do_load_results(self, arg):
-        'Getting results'
+    def do_load_exam_files(self, arg):
+        'Getting exam files'
         prefix = os.path.join('downloads', self.tag)
         # query = 'after:2020/06/08 before:2020/06/09'
         receive(self.service, self.date_query,
@@ -82,6 +82,7 @@ class MMPExamCli(cmd.Cmd):
 
     def do_load_messages(self, arg):
         'Getting messages'
+        # query = 'after:2020/06/08 before:2020/06/09'
         msgs = receive(self.service, self.date_query)
         oks = ['ok', 'Ok', 'oK', 'OK', 'ок', 'Ок', 'оК', 'ОК', 'получил', 'Получил']
         fails = ['fail', 'Fail', 'FAIL']
