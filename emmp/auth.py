@@ -1,14 +1,16 @@
-import pickle
 import os.path
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+import pickle
+
 from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+
 
 def auth():
-    SCOPES = ['https://mail.google.com/']
+    SCOPES = ["https://mail.google.com/"]
     creds = None
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    if os.path.exists("token.pickle"):
+        with open("token.pickle", "rb") as token:
             creds = pickle.load(token)
 
     if not creds or not creds.valid:
@@ -16,11 +18,10 @@ def auth():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                "credentials.json", SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open("token.pickle", "wb") as token:
             pickle.dump(creds, token)
 
-    service = build('gmail', 'v1', credentials=creds)
-    return build('gmail', 'v1', credentials=creds)
+    return build("gmail", "v1", credentials=creds)

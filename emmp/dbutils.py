@@ -1,5 +1,6 @@
 import datetime
 
+
 def get_persons(conn, tag):
     cursor = conn.cursor()
     query = '''select 
@@ -9,7 +10,9 @@ def get_persons(conn, tag):
     group_number,
     io
     from persons
-    where tag="{}"'''.format(tag)
+    where tag="{}"'''.format(
+        tag
+    )
     cursor.execute(query)
     result = dict()
     for row in cursor:
@@ -19,12 +22,13 @@ def get_persons(conn, tag):
         group_number = row[3]
         io = row[4]
         result[pid] = dict()
-        result[pid]['last_name'] = last_name
-        result[pid]['first_name'] = first_name
-        result[pid]['group_number'] = group_number
-        result[pid]['io'] = io
-        
+        result[pid]["last_name"] = last_name
+        result[pid]["first_name"] = first_name
+        result[pid]["group_number"] = group_number
+        result[pid]["io"] = io
+
     return result
+
 
 def register_sent_options(con, tag, poption):
     pass
